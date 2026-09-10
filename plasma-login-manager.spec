@@ -79,14 +79,13 @@ fi
 %{_bindir}/plasmalogin
 %{_bindir}/startplasma-login-wayland
 %{_bindir}/plasma-login-wallpaper
-%{_libexecdir}/plasmalogin-helper
-%{_libexecdir}/plasmalogin-helper-start-x11user
-%{_libexecdir}/plasma-login-greeter
+%{_libdir}/libexec/plasmalogin-helper
+%{_libdir}/libexec/plasmalogin-helper-start-x11user
+%{_libdir}/libexec/plasma-login-greeter
 %{_prefix}/lib/pam.d/plasmalogin
 %{_prefix}/lib/pam.d/plasmalogin-autologin
 %{_prefix}/lib/pam.d/plasmalogin-greeter
 %dir %{_sysconfdir}/plasmalogin.conf.d
-%config(noreplace) %{_sysconfdir}/plasmalogin.conf
 %{_datadir}/plasmalogin
 %{_datadir}/dbus-1/system.d/org.freedesktop.DisplayManager-plasmalogin.conf
 %{_datadir}/dbus-1/system-services/org.kde.kcontrol.kcmplasmalogin.service
