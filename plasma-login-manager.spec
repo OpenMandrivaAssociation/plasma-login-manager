@@ -4,7 +4,7 @@
 Summary:	Plasma display manager
 Name:		plasma-login-manager
 Version:	6.7.5
-Release:	1
+Release:	2
 License:	GPLv2+
 Group:		Graphical desktop/KDE
 URL:		https://invent.kde.org/plasma/plasma-login-manager
