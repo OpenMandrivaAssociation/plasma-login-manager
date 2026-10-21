@@ -1,0 +1,83 @@
+diff -ruN a/src/frontend/greeter/main.cpp b/src/frontend/greeter/main.cpp
+--- a/src/frontend/greeter/main.cpp	2026-10-20 11:08:07.000000000 +0200
++++ b/src/frontend/greeter/main.cpp	2026-10-21 23:46:05.682939784 +0200
+@@ -15,6 +15,7 @@
+ 
+ #include <KLocalizedQmlContext>
+ #include <KLocalizedString>
++#include <KWindowSystem>
+ #include <LayerShellQt/Window>
+ #include <PlasmaQuick/PlasmaQuick>
+ #include <kworkspace6/sessionmanagement.h>
+@@ -69,16 +70,24 @@
+ 
+         window->setGeometry(screen->geometry());
+ 
+-        if (auto layerShellWindow = LayerShellQt::Window::get(window)) {
+-            layerShellWindow->setScope(QStringLiteral("plasma-login-greeter"));
+-            layerShellWindow->setLayer(LayerShellQt::Window::LayerTop);
+-            layerShellWindow->setExclusiveZone(-1);
+-            layerShellWindow->setKeyboardInteractivity(LayerShellQt::Window::KeyboardInteractivityExclusive);
+-            layerShellWindow->setScreen(screen);
++        if (KWindowSystem::isPlatformWayland()) {
++            if (auto layerShellWindow = LayerShellQt::Window::get(window)) {
++                layerShellWindow->setScope(QStringLiteral("plasma-login-greeter"));
++                layerShellWindow->setLayer(LayerShellQt::Window::LayerTop);
++                layerShellWindow->setExclusiveZone(-1);
++                layerShellWindow->setKeyboardInteractivity(LayerShellQt::Window::KeyboardInteractivityExclusive);
++                layerShellWindow->setScreen(screen);
++            }
+         }
+ 
+         window->setResizeMode(QQuickView::SizeRootObjectToView);
+ 
++        if (KWindowSystem::isPlatformX11()) {
++            // Override-redirect so the window manager does not decorate the greeter.
++            // Wayland keeps the frameless view and the layer shell above.
++            window->setFlags(Qt::BypassWindowManagerHint);
++        }
++
+         window->setSource(QUrl("qrc:/qt/qml/org/kde/plasma/login/Main.qml"));
+         window->show();
+     }
+diff -ruN a/src/frontend/wallpaper/wallpaperapp.cpp b/src/frontend/wallpaper/wallpaperapp.cpp
+--- a/src/frontend/wallpaper/wallpaperapp.cpp	2026-10-20 11:08:07.000000000 +0200
++++ b/src/frontend/wallpaper/wallpaperapp.cpp	2026-10-21 23:46:05.630939132 +0200
+@@ -18,6 +18,7 @@
+ #include <KConfigPropertyMap>
+ #include <KLocalizedQmlContext>
+ #include <KPackage/PackageLoader>
++#include <KWindowSystem>
+ #include <LayerShellQt/Window>
+ #include <PlasmaQuick/PlasmaQuick>
+ 
+@@ -71,16 +72,23 @@
+ 
+     window->setGeometry(screen->geometry());
+ 
+-    if (auto layerShellWindow = LayerShellQt::Window::get(window)) {
+-        layerShellWindow->setScope(QStringLiteral("plasma-login-wallpaper"));
+-        layerShellWindow->setLayer(LayerShellQt::Window::LayerBackground);
+-        layerShellWindow->setExclusiveZone(-1);
+-        layerShellWindow->setKeyboardInteractivity(LayerShellQt::Window::KeyboardInteractivityNone);
+-        layerShellWindow->setScreen(screen);
++    if (KWindowSystem::isPlatformWayland()) {
++        if (auto layerShellWindow = LayerShellQt::Window::get(window)) {
++            layerShellWindow->setScope(QStringLiteral("plasma-login-wallpaper"));
++            layerShellWindow->setLayer(LayerShellQt::Window::LayerBackground);
++            layerShellWindow->setExclusiveZone(-1);
++            layerShellWindow->setKeyboardInteractivity(LayerShellQt::Window::KeyboardInteractivityNone);
++            layerShellWindow->setScreen(screen);
++        }
+     }
+ 
+     window->setResizeMode(QQuickView::SizeRootObjectToView);
+ 
++    if (KWindowSystem::isPlatformX11()) {
++        // X11 specific hint only on X11. Wayland stays on the layer shell.
++        window->setFlags(Qt::BypassWindowManagerHint);
++    }
++
+     setupWallpaperPlugin(window);
+     window->show();
+ }

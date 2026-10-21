@@ -4,7 +4,7 @@
 Summary:	Plasma display manager
 Name:		plasma-login-manager
 Version:	6.8.1
-Release:	1
+Release:	2
 License:	GPLv2+
 Group:		Graphical desktop/KDE
 URL:		https://invent.kde.org/plasma/plasma-login-manager
@@ -12,6 +12,8 @@ Source0:	http://download.kde.org/%{stable}/plasma/%{plasmaver}/%{name}-%{version
 Source1:	plasmalogin.pam
 Source2:	plasmalogin-autologin.pam
 Source3:	plasmalogin-greeter.pam
+# Override-redirect the greeter and wallpaper on X11. Wayland keeps the layer shell.
+Patch0:		plasma-login-manager-6.8.1-x11-bypass.patch
 
 BuildRequires:	cmake(ECM)
 BuildRequires:	cmake(Qt6Core)
